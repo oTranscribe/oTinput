@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test</title>
+</head>
+<body>
+    
+    <div class="example-input">
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script src="../dist/otinput.js" type="text/javascript" charset="utf-8"></script>
+
+    <script>
+    
+        $(function(){
+            var input = new oTinput({
+                element: document.querySelector('.example-input'),
+                onFileChange: function(file){
+                    console.log(file);
+                    alert('File is: '+file.name);
+                },
+                onFileError: function(err){
+                    console.log(err);
+                    alert('Error: '+err.message);
+                }
+                
+            });
+        });
+    
+    </script
+  
+</body>
+</html>
