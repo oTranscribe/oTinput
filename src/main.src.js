@@ -49,6 +49,7 @@ oTinput.prototype._setupElement = function(element){
     return $(element)[0];
 };
 oTinput.prototype._setupMouseEvents = function(){
+    var that = this;
     var element = this.element;
     var buttonEl = $(element).find('.file-input-wrapper')[0];
     buttonEl.addEventListener('dragover', function(){
@@ -58,10 +59,10 @@ oTinput.prototype._setupMouseEvents = function(){
         that._dragleave();
     }, false);
     $(element).find('.alt-input-button').click(function(){
-        $(element).find('.ext-input-field').show().find('input').focus();
+        that.showURLInput();
     });    
     $(element).find('.close-ext-input').click(function(){
-        $(element).find('.ext-input-field').hide();
+        that.showFileInput();
     });
 };
 oTinput.prototype._reactToFile = function(input){
@@ -87,5 +88,11 @@ oTinput.prototype._reactToURL = function(url){
         this._onURLError(err, url);
     }
 };
-
-
+oTinput.prototype.showURLInput = function(){
+    $(this.element).find('.ext-input-field').show().find('input').focus();
+    $(this.element).addClass('ext-input-active');
+};
+oTinput.prototype.showFileInput = function(){
+    $(this.element).find('.ext-input-field').hide();
+    $(this.element).removeClass('ext-input-active');
+};

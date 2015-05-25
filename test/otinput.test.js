@@ -25,6 +25,10 @@ QUnit.test( "Show/hide external element input", function( assert ) {
     assert.equal( $('.ext-input-field').css('display'), 'block' );
     $('.close-ext-input').click();
     assert.equal( $('.ext-input-field').css('display'), 'none' );
+    input.showURLInput();
+    assert.equal( $('.ext-input-field').css('display'), 'block' );
+    input.showFileInput();
+    assert.equal( $('.ext-input-field').css('display'), 'none' );
 });
 
 /*

@@ -39,5 +39,8 @@ oTranscribe's file input system.
 
 ## Methods
 
+- showURLInput
+- showFileInput
 - isFormatSupported ( filetype as string ) - also works without initialising object
 - getSupportedFormats (returns object with 'audio' and 'video' arrays of filetype names) - also works without initialising object
+

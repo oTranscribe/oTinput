@@ -89,13 +89,14 @@ oTinput.prototype._setupElement = function(element){
     var wrapper = '<div class="file-input-wrapper" style="'+wrapperStyle+'">'+button+fileInput+'</div>';
     var altButtonText = this._text.altButton || 'Enter file URL';
     var altButton = '<button class="alt-input-button">'+altButtonText+'</button>';
-    var urlInputText = 'Enter URL of audio or video file, or YouTube video:' || this._text.altInputText;
-    var urlInputClose = 'close' || this._text.closeAlt;
+    var urlInputText = this._text.altInputText || 'Enter URL of audio or video file, or YouTube video:';
+    var urlInputClose = this._text.closeAlt || 'close';
     var urlInput = '<div class="ext-input-field" style="display: none;"><div class="close-ext-input">'+urlInputClose+'</div><label>'+urlInputText+'<input type="text"></label><div class="ext-input-warning"></div></div>';
     $(element).html( wrapper + altButton + urlInput ); 
     return $(element)[0];
 };
 oTinput.prototype._setupMouseEvents = function(){
+    var that = this;
     var element = this.element;
     var buttonEl = $(element).find('.file-input-wrapper')[0];
     buttonEl.addEventListener('dragover', function(){
@@ -105,10 +106,10 @@ oTinput.prototype._setupMouseEvents = function(){
         that._dragleave();
     }, false);
     $(element).find('.alt-input-button').click(function(){
-        $(element).find('.ext-input-field').show().find('input').focus();
+        that.showURLInput();
     });    
     $(element).find('.close-ext-input').click(function(){
-        $(element).find('.ext-input-field').hide();
+        that.showFileInput();
     });
 };
 oTinput.prototype._reactToFile = function(input){
@@ -134,7 +135,13 @@ oTinput.prototype._reactToURL = function(url){
         this._onURLError(err, url);
     }
 };
-
-
+oTinput.prototype.showURLInput = function(){
+    $(this.element).find('.ext-input-field').show().find('input').focus();
+    $(this.element).addClass('ext-input-active');
+};
+oTinput.prototype.showFileInput = function(){
+    $(this.element).find('.ext-input-field').hide();
+    $(this.element).removeClass('ext-input-active');
+};
 
 }());
