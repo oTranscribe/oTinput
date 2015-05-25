@@ -1,6 +1,6 @@
-# Blank module template
+# oTinput
 
-This is a template for JavaScript module projects.
+oTranscribe's file input system.
 
 ## Repo structure
 
@@ -25,6 +25,10 @@ This is a template for JavaScript module projects.
 - element * (input element)
 - onFileChange - callback for when file changes. Callback argument is [File object](https://developer.mozilla.org/en/docs/Web/API/File)
 - onFileError - callback for when file is unsupported or otherwise invalid. Callback arguments are [Error object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error) and [File object](https://developer.mozilla.org/en/docs/Web/API/File)
+- onDragover: callback for when a file is dragged over the input and can be dropped
+- onDragleave: callback for when a file is dragged away from the input
+- text: object
+  - button
 
 ## Methods
 

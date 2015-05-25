@@ -6,7 +6,8 @@
 </head>
 <body>
     
-    <div class="example-input">
+    <div class="example-input"></div>
+    <div class="message"></div>
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script src="../dist/otinput.js" type="text/javascript" charset="utf-8"></script>
@@ -14,17 +15,28 @@
     <script>
     
         $(function(){
+            
+            // For example purposes only
+            function msg(txt){
+                $('.message').text(txt);
+            }
+            
             var input = new oTinput({
                 element: document.querySelector('.example-input'),
                 onFileChange: function(file){
                     console.log(file);
-                    alert('File is: '+file.name);
+                    msg('File is: '+file.name);
                 },
                 onFileError: function(err){
                     console.log(err);
-                    alert('Error: '+err.message);
+                    msg('Error: '+err.message);
+                },
+                onDragover: function(){
+                    msg('Drop file now to input');
+                },
+                onDragleave: function(){
+                    msg('');
                 }
-                
             });
         });
     
