@@ -3,13 +3,24 @@ function oTinput(config){
     this._text = config.text || {};
     this._onFileChange = config.onFileChange || function(){};
     this._onFileError = config.onFileError || function(){};
+    this._onURLSubmit = config.onURLSubmit || function(){};
+    this._onURLError = config.onURLError || function(){};
     this._dragover = config.onDragover || function(){};
     this._dragleave = config.onDragleave || function(){};
     this.element = this._setupElement(config.element);
+    this._setupMouseEvents();
     
-    $(this.element).find('input[type="file"]').change(function() {
+    $(this.element).find('input[type="file"]').change(function(){
         that._reactToFile(this);
-    });   
+    });
+    $(this.element).find('.ext-input-field input').on('submit',function(){
+        that._reactToURL( $(this).val() );
+    }).keypress(function(e){
+        if (e.which === 13) {
+            that._reactToURL( $(this).val() );
+            return false;
+        }
+    });    
 }
 window.oTinput = oTinput;
 oTinput.prototype._setupElement = function(element){
@@ -28,10 +39,17 @@ oTinput.prototype._setupElement = function(element){
     ].join(';');
     var fileInput = '<input type="file" accept="audio/*, video/*" style="'+fileInputStyle+'">';
     var wrapperStyle = 'position: relative; overflow: hidden;';
-    
     var wrapper = '<div class="file-input-wrapper" style="'+wrapperStyle+'">'+button+fileInput+'</div>';
-    $(element).html( wrapper );
-    
+    var altButtonText = this._text.altButton || 'Enter file URL';
+    var altButton = '<button class="alt-input-button">'+altButtonText+'</button>';
+    var urlInputText = this._text.altInputText || 'Enter URL of audio or video file, or YouTube video:';
+    var urlInputClose = this._text.closeAlt || 'close';
+    var urlInput = '<div class="ext-input-field" style="display: none;"><div class="close-ext-input">'+urlInputClose+'</div><label>'+urlInputText+'<input type="text"></label><div class="ext-input-warning"></div></div>';
+    $(element).html( wrapper + altButton + urlInput ); 
+    return $(element)[0];
+};
+oTinput.prototype._setupMouseEvents = function(){
+    var element = this.element;
     var buttonEl = $(element).find('.file-input-wrapper')[0];
     buttonEl.addEventListener('dragover', function(){
         that._dragover();
@@ -39,17 +57,12 @@ oTinput.prototype._setupElement = function(element){
     buttonEl.addEventListener('dragleave', function(){
         that._dragleave();
     }, false);
-    
-    // '<div class="yt-input" data-l10n-id="choose-youtube">or YouTube video</div>
-    // <div class="ext-input-field">
-    //     <div class="close-ext-input"><i class="fa fa-times"></i></div>
-    //     <label data-l10n-id="youtube-instrux">Enter YouTube video URL:
-    //         <input type="text">
-    //     </label>
-    //     <div class="ext-input-warning"></div>
-    // </div>'
-    
-    return $(element)[0];
+    $(element).find('.alt-input-button').click(function(){
+        $(element).find('.ext-input-field').show().find('input').focus();
+    });    
+    $(element).find('.close-ext-input').click(function(){
+        $(element).find('.ext-input-field').hide();
+    });
 };
 oTinput.prototype._reactToFile = function(input){
     var file = input.files[0];
@@ -60,36 +73,19 @@ oTinput.prototype._reactToFile = function(input){
         this._onFileError(err, file);
     }
 };
-
-
-oTinput.prototype.getSupportedFormats = function(){
-    var potentialFormatsAudio = ['mp3', 'ogg', 'webm', 'wav'];
-    var potentialFormatsVideo = ['mp4', 'ogg', 'webm'];
-    var isFormatSupported = this.isFormatSupported || oTinput.isFormatSupported;
-    var audio = $.map( potentialFormatsAudio, function( format, i ) {
-        if (isFormatSupported(format)){
-            return format;
-        }
-    });
-    var video = $.map( potentialFormatsVideo, function( format, i ) {
-        if (isFormatSupported(format)){
-            return format;
-        }
-    });
-    return {
-        audio: audio,
-        video: video
-    };
-};
-oTinput.prototype.isFormatSupported = function( format ){
-    var a;
-    if (typeof format !== 'string') {
-        var fileType = format.type.split("/")[0];
-        a = document.createElement(fileType);
-        return !!(a.canPlayType && a.canPlayType(format.type).replace(/no/, ''));
+oTinput.prototype._reactToURL = function(url){
+    var input = url.replace(/\s/g,'');
+    if (this.parseYoutubeURL(input)){
+        return this._onURLSubmit( input );
     }
-    a = document.createElement('audio');
-    return !!(a.canPlayType && a.canPlayType('audio/'+format+';').replace(/no/, ''));
+    var formatArr = input.split('.');
+    var format = formatArr[formatArr.length-1];
+    if ( this.isFormatSupported(format) ) {
+        this._onURLSubmit( input );
+    } else {
+        var err = new Error('Filetype '+format+' not supported by this browser');
+        this._onURLError(err, url);
+    }
 };
-oTinput.getSupportedFormats = oTinput.prototype.getSupportedFormats;
-oTinput.isFormatSupported = oTinput.prototype.isFormatSupported;
+
+

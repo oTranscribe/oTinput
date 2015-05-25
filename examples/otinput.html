@@ -6,6 +6,10 @@
 </head>
 <body>
     
+https://raw.githubusercontent.com/ejb/progressor.js/gh-pages/demos/discipline.mp3
+<br/>https://www.youtube.com/watch?v=N9XKLqGqwLA
+<br/>    
+    
     <div class="example-input"></div>
     <div class="message"></div>
     
@@ -21,7 +25,7 @@
                 $('.message').text(txt);
             }
             
-            var input = new oTinput({
+            window.input = new oTinput({
                 element: document.querySelector('.example-input'),
                 onFileChange: function(file){
                     console.log(file);
@@ -30,6 +34,12 @@
                 onFileError: function(err){
                     console.log(err);
                     msg('Error: '+err.message);
+                },
+                onURLSubmit: function(url){
+                    msg('URL submitted: '+url);
+                },
+                onURLError: function(err, url){
+                    msg('Bad URL: '+url);
                 },
                 onDragover: function(){
                     msg('Drop file now to input');

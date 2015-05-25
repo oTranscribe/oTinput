@@ -27,8 +27,15 @@ oTranscribe's file input system.
 - onFileError - callback for when file is unsupported or otherwise invalid. Callback arguments are [Error object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error) and [File object](https://developer.mozilla.org/en/docs/Web/API/File)
 - onDragover: callback for when a file is dragged over the input and can be dropped
 - onDragleave: callback for when a file is dragged away from the input
+- onURLSubmit - callback for when valid URL is submitted. Callback argument is the submitted URL
+- onURLError - callback for when URL's filetype is unsupported or otherwise invalid. Callback arguments are [Error object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error) and the submitted URL
+
 - text: object
   - button
+  - altButton
+  - altInputText
+  - closeAlt
+  
 
 ## Methods
 
