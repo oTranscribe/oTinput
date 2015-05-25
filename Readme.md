@@ -72,3 +72,14 @@ oTinput requires the [File API](http://caniuse.com/#search=file), so only suppor
 
 - Build dist folder
 - Run `grunt test`
+
+## Version history
+
+### v1.0.0
+
+May 25, 2015
+
+- Initial release
+
+
+
